@@ -1,6 +1,17 @@
 [package]
 name = "marco-morser"
+authors = ["Tim Bukreew"]
+categories = ["morse code", "education"]
 version = "0.1.0"
 edition = "2021"
+license = "Apache-2.0"
+description = "Morse code education program for kids"
 
 [dependencies]
+anyhow = "1.0.86"
+# eframe = "0.27.2"
+rodio = "0.18"
+
+firmware = { path = "../marco-pad/firmware" }
+serde = { version = "1.0", features = [ "derive" ] }
+bincode = "1.3.3"
