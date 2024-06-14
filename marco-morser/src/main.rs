@@ -9,7 +9,9 @@ fn main() -> Result<()> {
 
     let sine = SineWave::new(666.0);
 
-    // let fart_data = Cursor::new(include_bytes!("../assets/fart.ogg"));
+    let fart_data = Cursor::new(include_bytes!("../assets/fart.ogg"));
+    let villager = Cursor::new(include_bytes!("../assets/idle2.mp3"));
+    let death = Cursor::new(include_bytes!("../assets/death.mp3"));
 
     let connection = UdpSocket::bind("0.0.0.0:0")?;
     connection.connect("192.168.42.1:5001")?;
@@ -30,7 +32,23 @@ fn main() -> Result<()> {
         if let firmware::Message::ButtonReport(message) = message {
             if message.state == firmware::State::Pressed {
                 // let fart = Decoder::new_vorbis(fart_data.clone())?;
-                sink.append(sine.clone());
+                match message.id {
+                    2 => {
+                        let death = Decoder::new_mp3(death.clone())?;
+                        sink.append(death);
+                    }
+                    3 => {
+                        let idle = Decoder::new_mp3(villager.clone())?;
+                        sink.append(idle);
+                    }
+                    4 => {
+                        let fart = Decoder::new_vorbis(fart_data.clone())?;
+                        sink.append(fart);
+                    }
+                    _ => {
+                        sink.append(sine.clone());
+                    }
+                }
             } else {
                 sink.stop();
             }
